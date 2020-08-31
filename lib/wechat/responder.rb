@@ -105,7 +105,7 @@ module Wechat
       end
 
       def responder_for(message)
-        message_type = message[:MsgType].to_sym
+        message_type = (message[:MsgType] || message[:InfoType]).to_sym
         responders = user_defined_responders(message_type)
 
         case message_type
