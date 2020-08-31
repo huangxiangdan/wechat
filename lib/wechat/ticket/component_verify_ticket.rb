@@ -6,7 +6,7 @@ require 'securerandom'
 module Wechat
   module Ticket
     class ComponentVerifyTicket
-      attr_reader :component_ticket_file, :access_ticket, :ticket_life_in_seconds, :got_ticket_at
+      attr_reader :component_ticket_file, :access_ticket, :ticket_life_in_seconds, :got_ticket_at, :component_appid
 
       def initialize(component_ticket_file, component_appid)
         @component_ticket_file = component_ticket_file
@@ -19,17 +19,19 @@ module Wechat
         access_ticket
       end
 
+      def write_ticket_to_store(ticket_hash)
+        ticket_hash['got_ticket_at'] = Time.now.to_i
+        write_ticket(ticket_hash)
+      end
+
       protected
 
       def read_ticket_from_store
         td = read_ticket
         @got_ticket_at = td.fetch('got_ticket_at').to_i
         @access_ticket = td.fetch('ticket') # return access_ticket same time
-      end
-
-      def write_ticket_to_store(ticket_hash)
-        ticket_hash['got_ticket_at'] = Time.now.to_i
-        write_ticket(ticket_hash)
+      rescue JSON::ParserError, Errno::ENOENT, KeyError, TypeError
+        raise "component_verify_ticket is missing"
       end
 
       def read_ticket

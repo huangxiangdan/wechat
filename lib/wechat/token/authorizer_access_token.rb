@@ -6,7 +6,7 @@ require 'wechat/token/component_access_token'
 module Wechat
   module Token
     class AuthorizerAccessToken < AccessTokenBase
-      attr_reader :component_ticket_file
+      attr_reader :component_ticket_file, :component_appid
 
       def initialize(client, authorizer_appid, authorizer_refresh_token, component_appid, component_secret, token_file, component_token_file, component_ticket_file)
         super(client, authorizer_appid, authorizer_refresh_token, token_file)
