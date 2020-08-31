@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'wechat/api'
+require 'wechat/token/authorizer_access_token'
+require 'wechat/ticket/component_verify_ticket'
 
 module Wechat
   class ComponentApi < Api

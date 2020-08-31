@@ -16,7 +16,7 @@ module Wechat
         wx_class.new(c.appid, c.secret, token_file, c.timeout, c.skip_verify_ssl, js_token_file)        
       elsif c.corpid && c.corpsecret && token_file.present?
         Wechat::CorpApi.new(c.corpid, c.corpsecret, token_file, c.agentid, c.timeout, c.skip_verify_ssl, js_token_file)
-      elsif c.component_appid && component_secret && component_token.present?
+      elsif c.component_appid && c.component_secret && component_token_file.present?
         Wechat::ComponentApi.new(c.authorizer_appid, c.authorizer_refresh_token, c.component_appid, c.component_secret, token_file, component_token_file, \
           component_ticket_file, c.timeout, c.skip_verify_ssl, js_token_file)
       else
@@ -92,7 +92,7 @@ module Wechat
             Figaro::Application.new(path: application_config_file, environment: rails_env).load
           end
           config = resolve_config_file(rails_config_file, rails_env)
-          if config.present? && (default = config[:default]) && (default['appid'] || default['corpid'])
+          if config.present? && (default = config[:default]) && (default['appid'] || default['corpid'] || default['component_appid'])
             puts "Using rails project #{ENV['WECHAT_CONF_FILE'] || 'config/wechat.yml'} #{rails_env} setting..."
             return config
           end
