@@ -8,8 +8,9 @@ module Wechat
     class ComponentVerifyTicket
       attr_reader :component_ticket_file, :access_ticket, :ticket_life_in_seconds, :got_ticket_at
 
-      def initialize(component_ticket_file)
+      def initialize(component_ticket_file, component_appid)
         @component_ticket_file = component_ticket_file
+        @component_appid = component_appid
       end
 
       def ticket

@@ -41,4 +41,22 @@ module Wechat
       end
     end
   end
+
+  module Ticket
+    class ComponentVerifyTicket
+      def read_ticket
+        JSON.parse(Wechat.redis.get(redis_key)) || {}
+      end
+
+      def write_ticket(ticket_hash)
+        Wechat.redis.set redis_key, ticket_hash.to_json
+      end
+
+      private
+
+      def redis_key
+        "my_app_wechat_ticket_#{component_appid}"
+      end
+    end
+  end
 end

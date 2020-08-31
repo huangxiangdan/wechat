@@ -8,7 +8,7 @@ module Wechat
       attr_reader :component_ticket_file
 
       def initialize(client, authorizer_appid, authorizer_refresh_token, component_appid, component_secret, token_file, component_token_file, component_ticket_file)
-        super.initialize(client, authorizer_appid, nil, token_file)
+        super.initialize(client, authorizer_appid, authorizer_refresh_token, token_file)
         @authorizer_appid = authorizer_appid
         @component_access_token = ComponentAccessToken.new(client, component_appid, component_secret, component_token_file, component_ticket_file)
         @component_appid = component_appid

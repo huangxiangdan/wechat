@@ -17,7 +17,7 @@ module Wechat
       elsif c.corpid && c.corpsecret && token_file.present?
         Wechat::CorpApi.new(c.corpid, c.corpsecret, token_file, c.agentid, c.timeout, c.skip_verify_ssl, js_token_file)
       elsif c.component_appid && component_secret && component_token.present?
-        Wechat::ComponentApi.new(c.appid, c.secret, c.component_appid, c.component_secret, token_file, component_token_file, \
+        Wechat::ComponentApi.new(c.authorizer_appid, c.authorizer_refresh_token, c.component_appid, c.component_secret, token_file, component_token_file, \
           component_ticket_file, c.timeout, c.skip_verify_ssl, js_token_file)
       else
         raise 'Need create ~/.wechat.yml with wechat appid and secret or running at rails root folder so wechat can read config/wechat.yml'
@@ -137,6 +137,8 @@ module Wechat
                 agentid: ENV['WECHAT_AGENTID'],
                 component_appid: ENV['component_appid'],
                 component_secret: ENV['component_secret'],
+                authorizer_appid: ENV['authorizer_appid'],
+                authorizer_refresh_token: ENV['authorizer_refresh_token'],
                 component_token: ENV['component_token'],
                 component_ticket: ENV['component_ticket'],
                 token: ENV['WECHAT_TOKEN'],

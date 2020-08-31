@@ -37,6 +37,8 @@ class WechatConfig < ActiveRecord::Base
     elsif self[:component_appid].present
       # component account
       errors.add(:component_secret, 'cannot be nil when component_appid is set') if self[:component_secret].blank?
+      errors.add(:authorizer_appid, 'cannot be nil when authorizer_appid is set') if self[:authorizer_appid].blank?
+      errors.add(:authorizer_refresh_token, 'cannot be nil when authorizer_refresh_token is set') if self[:authorizer_refresh_token].blank?
     else
       errors[:base] << 'Either appid or corpid must be set'
     end
