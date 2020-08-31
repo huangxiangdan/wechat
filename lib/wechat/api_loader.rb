@@ -8,12 +8,17 @@ module Wechat
 
       token_file = options[:token_file] || c.access_token.presence || '/var/tmp/wechat_access_token'
       js_token_file = options[:js_token_file] || c.jsapi_ticket.presence || '/var/tmp/wechat_jsapi_ticket'
+      component_token_file = options[:component_token] || c.component_token.presence || '/var/tmp/component_token'
+      component_ticket_file = options[:component_ticket] || c.component_ticket.presence || '/var/tmp/component_ticket'
       type = options[:type] || c.type
       if c.appid && c.secret && token_file.present?
         wx_class = type == 'mp' ? Wechat::MpApi : Wechat::Api
-        wx_class.new(c.appid, c.secret, token_file, c.timeout, c.skip_verify_ssl, js_token_file)
+        wx_class.new(c.appid, c.secret, token_file, c.timeout, c.skip_verify_ssl, js_token_file)        
       elsif c.corpid && c.corpsecret && token_file.present?
         Wechat::CorpApi.new(c.corpid, c.corpsecret, token_file, c.agentid, c.timeout, c.skip_verify_ssl, js_token_file)
+      elsif c.component_appid && component_secret && component_token.present?
+        Wechat::ComponentApi.new(c.appid, c.secret, c.component_appid, c.component_secret, token_file, component_token_file, \
+          component_ticket_file, c.timeout, c.skip_verify_ssl, js_token_file)
       else
         raise 'Need create ~/.wechat.yml with wechat appid and secret or running at rails root folder so wechat can read config/wechat.yml'
       end
@@ -46,6 +51,8 @@ module Wechat
         configs.each do |_, cfg|
           cfg[:access_token] ||= Rails.root.try(:join, 'tmp/access_token').try(:to_path)
           cfg[:jsapi_ticket] ||= Rails.root.try(:join, 'tmp/jsapi_ticket').try(:to_path)
+          cfg[:component_token] ||= Rails.root.try(:join, 'tmp/component_token').try(:to_path)
+          cfg[:component_ticket] ||= Rails.root.try(:join, 'tmp/component_ticket').try(:to_path)
         end
       end
 
@@ -128,6 +135,10 @@ module Wechat
                 corpid: ENV['WECHAT_CORPID'],
                 corpsecret: ENV['WECHAT_CORPSECRET'],
                 agentid: ENV['WECHAT_AGENTID'],
+                component_appid: ENV['component_appid'],
+                component_secret: ENV['component_secret'],
+                component_token: ENV['component_token'],
+                component_ticket: ENV['component_ticket'],
                 token: ENV['WECHAT_TOKEN'],
                 access_token: ENV['WECHAT_ACCESS_TOKEN'],
                 encrypt_mode: ENV['WECHAT_ENCRYPT_MODE'],

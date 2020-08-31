@@ -34,6 +34,9 @@ class WechatConfig < ActiveRecord::Base
       # corp account
       errors.add(:corpsecret, 'cannot be nil when corpid is set') if self[:corpsecret].blank?
       errors.add(:agentid, 'cannot be nil when corpid is set') if self[:agentid].blank?
+    elsif self[:component_appid].present
+      # component account
+      errors.add(:component_secret, 'cannot be nil when component_appid is set') if self[:component_secret].blank?
     else
       errors[:base] << 'Either appid or corpid must be set'
     end

@@ -33,6 +33,8 @@ module ActionController
       self.appid = opts[:appid] || cfg.appid
       self.corpid = opts[:corpid] || cfg.corpid
       self.agentid = opts[:agentid] || cfg.agentid
+      self.component_appid = opts[:component_appid] || cfg.component_appid
+      self.component_secret = opts[:component_secret] || cfg.component_secret
       self.encrypt_mode = opts[:encrypt_mode] || cfg.encrypt_mode || corpid.present?
       self.encoding_aes_key = opts[:encoding_aes_key] || cfg.encoding_aes_key
       self.trusted_domain_fullname = opts[:trusted_domain_fullname] || cfg.trusted_domain_fullname
@@ -48,11 +50,16 @@ module ActionController
 
       access_token = opts[:access_token] || cfg.access_token
       jsapi_ticket = opts[:jsapi_ticket] || cfg.jsapi_ticket
+      component_token = opts[:component_token] || cfg.component_token
+      component_ticket = opts[:component_ticket] || cfg.component_ticket
 
       if corpid.present?
         corpsecret = opts[:corpsecret] || cfg.corpsecret
         Wechat::CorpApi.new(corpid, corpsecret, access_token, \
                             agentid, timeout, skip_verify_ssl, jsapi_ticket)
+      elsif component_appid.present?
+        Wechat::ComponentApi.new(appid, secret, component_appid, component_secret, access_token, component_token, \
+          component_ticket, timeout, skip_verify_ssl, jsapi_ticket)
       else
         secret = opts[:secret] || cfg.secret
         Wechat::Api.new(appid, secret, access_token, \
